@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Drawing divs with data</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+		
+			div.bar {
+				display: inline-block;
+				width: 20px;
+				height: 75px;
+				background-color: teal;
+				margin-right: 2px;
+			}
+		
+		</style>
+	</head>
+	
+	<body>
+		<script type="text/javascript">
+			//  display: inline-block   permet d'afficher les éléments sur la même ligne
+			var dataset = []; //Initialize empty array
+            for (var i = 0; i < 25; i++) { //Loop 25 times
+				var newNumber = Math.random() * 30; //New random number (0-30)
+				dataset.push(newNumber); //Add new number to array
+            }
+		 
+			d3.select("body").selectAll("div")
+				.data(dataset)
+				.enter()
+				.append("div")
+				.attr("class", "bar")
+				.style("height", function(d) {
+					var barHeight = d * 5; //Scale up by factor of 5
+					return barHeight + "px";
+				});			
+	 </script>
+	</body>
+</html>
