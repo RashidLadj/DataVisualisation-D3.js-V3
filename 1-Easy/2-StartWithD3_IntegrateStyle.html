@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: IntegrateStyle</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<h1>Dataset</h1>
+		<h4 id="Dataset"></h1><br>
+		<h2>Contraite : si Tab[0] inferieur à Tab[1] print les deux sinon que le premier </h1>
+
+		<script type="text/javascript">
+				
+			var dataset = [[50, 120], [140, 110], [250, 150], [100, 133], [330, 195]];
+				datasetID = document.getElementById('Dataset');
+				datasetID.innerHTML = "[[50, 120], [140, 110], [250, 150], [100, 133], [330, 195]]"
+
+			var section = d3.select("body").selectAll("p")
+			section.data(dataset)
+			.enter()
+			.append("p")
+			.text(function(d) {
+				if(d[0]<d[1])
+					return (d[0] + " "+ d[1]);
+				else 
+					return d[0];
+			})
+			.style('color',function(d) {
+				if(d[0]<d[1]) 
+					return 'red'; 
+				else 
+					return 'black';
+			});
+		</script>
+		
+	</body>
+</html>
