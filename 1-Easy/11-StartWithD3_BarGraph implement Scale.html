@@ -46,10 +46,10 @@
 			   })
 			   .attr("width", width / dataset.length - barPadding)
 			   .attr("height", function(d) {
-			   		return yScale(d);
+			   		return yScale(d) - padding;
 			   })
 			   .attr("fill", function(d) {
-                	return "rgb(0, 0, " + (d * 10) + ")";
+                	return "rgb(0, 0, " + (d * 255/maxValue) + ")";
                 });
 			
 			svg.selectAll("text")
