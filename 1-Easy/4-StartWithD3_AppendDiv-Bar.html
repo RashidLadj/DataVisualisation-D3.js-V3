@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Append Div_bar</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+		
+			div.bar {
+				display: inline-block;
+				width: 20px;
+				height: 75px;
+				background-color: teal;
+				margin-right: 2px;
+			}
+		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+		   	//  display: inline-block   permet d'afficher les éléments sur la même ligne
+		   	var dataset = [ 25, 7, 5, 26, 11, 8, 25, 14, 23, 19, 14, 11, 22, 29, 11, 13, 12, 17, 18, 10, 24, 18, 25, 9, 3 ];
+			
+			d3.select("body").selectAll("div")
+				.data(dataset)
+				.enter()
+				.append("div")
+				.attr("class", "bar")
+				.style("height", function(d) {
+					var barHeight = d * 5; //Scale up by factor of 5
+					return barHeight + "px";
+				});			
+		</script>
+	</body>
+</html>
