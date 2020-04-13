@@ -5,7 +5,17 @@
 		<title>D3: Start With SVG _ Append g for X and Y Axis</title>
 		<script type="text/javascript" src="d3.v3.js"></script>
 		<style type="text/css">
-			/* No style rules here yet */		
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				shape-rendering: crispEdges;
+			}
+			
+			.axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+			}
 		</style>
 	</head>
 	<body>
@@ -15,9 +25,10 @@
 			var height = 400;
 			var padding = 40;
 			var barPadding = 5;
+			var numDataPoints = 25;
 
 			var dataset = []; /** Initialize empty array **/
-            for (var i = 0; i < 25; i++) { /** Loop 25 times **/
+            for (var i = 0; i < numDataPoints; i++) { /** Loop 25 times **/
 				var newNumber = Math.floor(Math.random() * 30); /** New random number (0-30) **/
 				dataset.push(newNumber); /** Add new number to array **/
 			}
@@ -27,7 +38,7 @@
 			/** Create Scale Functions **/
 			var xScale = d3.scale.linear()
 								 .domain([0, dataset.length+1])
-								 .range([padding+5, width - padding - barPadding]);
+								 .range([padding, width - padding]);
 
 			var yScale = d3.scale.linear()
 								 .domain([0, maxValue])
@@ -51,25 +62,25 @@
 						.attr("width", width)
 						.attr("height", height)
 						.attr("border",1)
-						.append("g")
-						// .attr("transform", "translate(" + 0 + "," + 20 + ")");
+						.append("g");
+						
 			
-			/** Juste Pour voir le SVG **/
-			var borderPath = svg.append("rect")
-       			.attr("x", 0)
-       			.attr("y", 0)
-       			.attr("height", height)
-       			.attr("width", width)
-       			.style("stroke", 'black')
-       			.style("fill", "none")
-       			.style("stroke-width", 1);
+			// /** Juste Pour voir le SVG **/
+			// var borderPath = svg.append("rect")
+       		// 	.attr("x", 0)
+       		// 	.attr("y", 0)
+       		// 	.attr("height", height)
+       		// 	.attr("width", width)
+       		// 	.style("stroke", 'black')
+       		// 	.style("fill", "none")
+       		// 	.style("stroke-width", 1);
 			
 			svg.selectAll("rect")
 			   .data(dataset)
 			   .enter()
 			   .append("rect")
 			   .attr("x", function(data, i) { /** Dynamique en fonction de la longueuur du dataset **/
-				return xScale(i);
+					return xScale(i);
 			   })
 			   .attr("y", function(data) {
 					return yScale( data) ;

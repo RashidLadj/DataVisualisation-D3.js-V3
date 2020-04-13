@@ -22,7 +22,7 @@
 			// Create Scale Functions
 			var xScale = d3.scale.linear()
 								 .domain([0, dataset.length])
-								 .range([padding, width - padding - barPadding]);
+								 .range([padding, width - padding]);
 
 			var yScale = d3.scale.linear()
 								 .domain([0, d3.max(dataset)])
