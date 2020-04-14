@@ -40,9 +40,12 @@
 			var maxValue = d3.max(dataset)
 			
 			/** Create Scale Functions **/
-			var xScale = d3.scale.linear()
-								.domain([0, dataset.length+1])
-								.range([padding, width - padding]);
+			// var xScale = d3.scale.linear()
+			// 					.domain([0, dataset.length+1])
+			// 					.range([padding, width - padding]);
+			var xScale = d3.scale.ordinal()
+								.domain(d3.range(dataset.length))
+								.rangeRoundBands([padding, width - padding], 0.05);
 
 			var yScale = d3.scale.linear()
 								.domain([0, d3.max(dataset)])
@@ -78,7 +81,7 @@
 				.attr("y", function(data) {
 					return yScale( data) ;
 				})
-				.attr("width", width / dataset.length - barPadding)
+				.attr("width", xScale.rangeBand())
 				.attr("height", function(data) {
 					return yScale(maxValue - data) - padding;
 				})
@@ -91,13 +94,13 @@
 				.enter()
 				.append("text")
 				.text(function(data) {
-						return data;
+					return data;
 				})
 				.attr("x", function(data, i) {
-						return xScale(i)+4;
+					return xScale(i)+ xScale.rangeBand() / 3;
 				})
 				.attr("y", function(data) {
-						return yScale(data) + 15;
+					return yScale(data) + 15;
 				})
 				.attr("font-family", "sans-serif")
 				.attr("font-size", "11px")
@@ -149,7 +152,7 @@
 									.domain([0, d3.max(dataset)])
 									.range([height - padding, padding]);
 				
-				/** ReDefine X axis because maxValue change **/
+				/** ReDefine Y axis because maxValue change **/
 				yAxis = d3.svg.axis()
 								.scale(yScale)
 								.orient("left")
@@ -165,7 +168,7 @@
 					.attr("y", function(data) {
 						return yScale( data) ;
 					})
-					.attr("width", width / dataset.length - barPadding)
+					.attr("width", xScale.rangeBand())//width / dataset.length - barPadding)
 					.attr("height", function(data) {
 						return yScale(maxValue - data) - padding;
 					})
@@ -178,13 +181,13 @@
 					.transition()		/** <-- This makes it a smooth transition! Update value ,not append **/ 
 					.duration(durationTransition) 	/** Duration Of transtion **/ 
 					.text(function(data) {
-							return data;
+						return data;
 					})
 					.attr("x", function(data, i) {
-							return xScale(i)+4;
+						return xScale(i)+ xScale.rangeBand() / 3;
 					})
 					.attr("y", function(data) {
-							return yScale(data) + 15;
+						return yScale(data) + 15;
 					})
 					.attr("font-family", "sans-serif")
 					.attr("font-size", "11px")
