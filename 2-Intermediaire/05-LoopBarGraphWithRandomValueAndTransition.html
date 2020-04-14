@@ -128,7 +128,8 @@
 		//#endregion "First Draw"
 
 		//#region "Loop Draw"
-			window.setInterval(update, 1000);
+			var durationTransition = 2000;
+			window.setInterval(update, durationTransition);
 			function update(){
 				/** Remove Axis **/
 				svg.selectAll("g").remove();
@@ -155,7 +156,8 @@
 
 				svg.selectAll("rect")
 					.data(dataset)
-					.transition()                  /** <-- This makes it a smooth transition! Update value ,not append **/ 
+					.transition()                  /** <-- This makes it a smooth transition! Update value ,not append **/
+					.duration(durationTransition) 	/** Duration Of transtion **/ 
 					.attr("x", function(data, i) { /** Dynamique en fonction de la longueuur du dataset **/
 						return xScale(i);
 					})
@@ -173,6 +175,7 @@
 				svg.selectAll("text")
 					.data(dataset)
 					.transition()		/** <-- This makes it a smooth transition! Update value ,not append **/ 
+					.duration(durationTransition) 	/** Duration Of transtion **/
 					.text(function(data) {
 							return data;
 					})
