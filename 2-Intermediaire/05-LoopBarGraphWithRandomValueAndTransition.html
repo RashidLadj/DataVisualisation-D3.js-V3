@@ -129,15 +129,16 @@
 
 		//#region "Loop Draw"
 			var durationTransition = 2000;
-			window.setInterval(update, durationTransition);
+			var delayTransition = 500;
+			window.setInterval(update, delayTransition+durationTransition);
 			function update(){
 				/** Remove Axis **/
 				svg.selectAll("g").remove();
 
 				var dataset = []; /** Initialize empty array **/
-				var khra = Math.floor(Math.random() * 10)
+				var rand = Math.floor(Math.random() * 10)
 				for (var i = 0; i < numDataPoints; i++) { /** Loop 25 times **/
-					var newNumber = Math.floor(Math.random() * (30+khra)); /** New random number (0-30) **/
+					var newNumber = Math.floor(Math.random() * (30+rand)); /** New random number (0-30) **/
 					dataset.push(newNumber); /** Add new number to array **/
 				}
 				
@@ -157,7 +158,9 @@
 				svg.selectAll("rect")
 					.data(dataset)
 					.transition()                  /** <-- This makes it a smooth transition! Update value ,not append **/
+					.delay(delayTransition)						/** Delay before transition **/
 					.duration(durationTransition) 	/** Duration Of transtion **/ 
+					.ease("bounce") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
 					.attr("x", function(data, i) { /** Dynamique en fonction de la longueuur du dataset **/
 						return xScale(i);
 					})
@@ -175,7 +178,9 @@
 				svg.selectAll("text")
 					.data(dataset)
 					.transition()		/** <-- This makes it a smooth transition! Update value ,not append **/ 
+					.delay(delayTransition)						/** Delay before transition **/
 					.duration(durationTransition) 	/** Duration Of transtion **/
+					.ease("bounce") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
 					.text(function(data) {
 						return data;
 					})

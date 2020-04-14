@@ -130,6 +130,7 @@
 		//#region "Loop Draw"
 			d3.select("p").on("click", update);
 			var durationTransition = 2000;
+			var delayTransition = 500;
 			function update(){
 				/** Remove Axis **/
 				svg.selectAll("g").remove();
@@ -172,7 +173,9 @@
 				svg.selectAll("circle")
 					.data(dataset)
 					.transition()                  /** <-- This makes it a smooth transition! Update value ,not append **/ 
+					.delay(delayTransition)						/** Delay before transition **/
 					.duration(durationTransition) 	/** Duration Of transtion **/ 
+					.ease("linear") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
 					.attr("cx", function(d) {
 							return xScale(d[0]);
 					})
@@ -187,7 +190,9 @@
 				svg.selectAll("text")
 					.data(dataset)
 					.transition()                  /** <-- This makes it a smooth transition! Update value ,not append **/ 
+					.delay(delayTransition)						/** Delay before transition **/
 					.duration(durationTransition) 	/** Duration Of transtion **/ 
+					.ease("linear") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
 					.text(function(d) {
 							return "("+d[0] + "," + d[1]+")";
 					})
