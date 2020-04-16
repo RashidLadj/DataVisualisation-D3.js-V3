@@ -10,27 +10,26 @@
 	</head>
 	<body>
 		<script type="text/javascript">
-			//Width and height
+			/** Global variables **/
 			var width   = 500;
 			var height  = 100;
 			var dataset = [ 15, 10, 15, 20, 25 ];
 			
-			//Create SVG element
+			/** Create SVG element **/ 
 			var svg = d3.select("body")
 						.append("svg")
 						.attr("width", width)
 						.attr("height", height);
+
+			/** Create Circles **/ 
 			svg.selectAll("circle")
 			    .data(dataset)
 			    .enter()
 			    .append("circle")
-			    .attr("cx", function(d, i) {
-					return (i * 50) + 25;
-				})// i from 0 to number of data
+			    .attr("cx", (d, i) => i * 50 + 25) /** i from 0 to number of data **/
 				.attr("cy", 2*height/3)
-				.attr("r", function(d) {
-					return d;
-				});
+				.attr("r", (d) => d);
+			
 		</script>
 	</body>
 </html>

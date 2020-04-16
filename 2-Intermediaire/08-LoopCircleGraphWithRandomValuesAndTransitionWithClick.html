@@ -173,7 +173,13 @@
 				svg.selectAll("circle")
 					.data(dataset)
 					.transition()                  /** <-- This makes it a smooth transition! Update value ,not append **/ 
-					.delay(delayTransition)						/** Delay before transition **/
+					//.delay(delayTransition)						/** Delay before transition **/
+					// .delay(function(d, i) {
+					// 	return i * 100;		/** One-tenth of an additional second delay for each subsequent element **/
+					// })
+					.delay(function(d, i) {// it returns the values : 0, 50, 150, 200, 950
+						return i / dataset.length * 1000;
+					})
 					.duration(durationTransition) 	/** Duration Of transtion **/ 
 					.ease("linear") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
 					.attr("cx", function(d) {
@@ -190,7 +196,13 @@
 				svg.selectAll("text")
 					.data(dataset)
 					.transition()                  /** <-- This makes it a smooth transition! Update value ,not append **/ 
-					.delay(delayTransition)						/** Delay before transition **/
+					//.delay(delayTransition)						/** Delay before transition **/
+					// .delay(function(d, i) {
+					// 	return i * 100;		/** One-tenth of an additional second delay for each subsequent element **/
+					// })
+					.delay(function(d, i) {// it returns the values : 0, 50, 150, 200, 950
+						return i / dataset.length * 1000;
+					})
 					.duration(durationTransition) 	/** Duration Of transtion **/ 
 					.ease("linear") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
 					.text(function(d) {

@@ -1,0 +1,51 @@
+[
+    {
+        "Specialite": "RSD",
+        "Values":[
+            { "categorie" : "M1", "number" : 185, "maxAccept" : 140 },
+            { "categorie" : "M2", "number" : 320, "maxAccept" : 200 }
+        ]
+    },
+    {
+        "Specialite": "MIL",
+        "Values":[
+            { "categorie" : "M1", "number" : 185, "maxAccept" : 160 },
+            { "categorie" : "M2", "number" : 230, "maxAccept" : 130 }
+        ]
+    },
+    {
+        "Specialite": "SII",
+        "Values":[
+            { "categorie" : "M1", "number" : 230, "maxAccept" : 150 },
+            { "categorie" : "M2", "number" : 240, "maxAccept" : 120 }
+        ]
+    },
+    {
+        "Specialite": "MIV",
+        "Values":[
+            { "categorie" : "M1", "number" : 45, "maxAccept" : 50 },
+            { "categorie" : "M2", "number" : 85, "maxAccept" : 60 }
+        ]
+    },
+    {
+        "Specialite": "MIND",
+        "Values":[
+            { "categorie" : "M1", "number" : 30, "maxAccept" : 50 },
+            { "categorie" : "M2", "number" : 33, "maxAccept" : 50 }
+        ]
+    },
+    {
+        "Specialite": "HPC",
+        "Values":[
+            { "categorie" : "M1", "number" : 10, "maxAccept" : 25 },
+            { "categorie" : "M2", "number" : 15, "maxAccept" : 30 }
+        ]
+    },
+    {
+        "Specialite": "BIO",
+        "Values":[
+            { "categorie" : "M1", "number" : 12, "maxAccept" : 25 },
+            { "categorie" : "M2", "number" : 25, "maxAccept" : 30 }
+        ]
+    }
+]

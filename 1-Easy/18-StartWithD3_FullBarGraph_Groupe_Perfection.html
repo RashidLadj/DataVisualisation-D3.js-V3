@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Start With SVG _ Append g for X and Y Axis</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				stroke-width: 2px;
+				shape-rendering: crispEdges;
+			}
+
+			.axis .domain {
+				/* display: none; */
+			}
+			
+			.axis text {
+				font-size: 14px;
+			}
+
+			text {
+				fill: #727075;
+				stroke: none;
+				font-weight: bold;
+			}
+
+			@-webkit-keyframes pulse {       
+				0% {opacity: 0.8;}
+				50% {opacity: 0.3;}
+				100% {opacity: 0.8;}
+			}
+			
+			.bars-container-middle {
+				fill: none;
+				stroke: none;
+			}
+			
+			.danger {
+					fill: pink;
+					/** Giving Animation Function **/
+					-webkit-animation: pulse 1.5s ease infinite;
+			}
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			/** Define variables **/
+			var widthSVG = 800;
+			var heightSVG = 300;
+			var margin = {top: 20, right: 60, bottom: 20, left: 40};
+			var width = widthSVG - margin.left - margin.right;
+			var height = heightSVG - margin.top - margin.bottom;
+			var barPadding = 5;
+			var numDataPoints = 25;
+
+			/** Create Scale Functions **/
+			var xScale0	 = d3.scale.ordinal()
+								//.domain(d3.range(dataset.length))
+								.rangeRoundBands([0, width], 0.2) ; /** 0.1 => space entre chaque grupe, 0.5 espace du debut **/
+			
+			var xScale1 = d3.scale.ordinal()
+								//.domain(d3.range(dataset.length))
+								.rangeRoundBands(0,05,0.05) ; /** 0.1 => space entre chaque grupe, 0.5 espace du debut **/
+
+			var yScale = d3.scale.linear()
+								 //.domain([0, maxValue])
+								 .range([height, 0]);
+			
+			var Colors = d3.scale.ordinal()
+    							.range(["#FF9400", "#ff0000", "#ffdd00"]);
+
+			/** Define X axis **/
+			var xAxis = d3.svg.axis()
+							  .scale(xScale0)
+							  .orient("bottom")
+							  .ticks(10);
+			
+			/** Define X axis **/
+			var yAxis = d3.svg.axis()
+							  .scale(yScale)
+							  .orient("left")
+							  .ticks(10);
+			
+			/** Create SVG element **/
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", widthSVG)
+						.attr("height", heightSVG)
+						.append("g")
+						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			d3.json("Data/info-data.json", function(error, data) {
+
+				var specialites = data.map((d) => d.Specialite );			/** Recuperation des Label X **/
+  				var categories = data[0].Values.map((d) => d.categorie ); 	/** Recuperation des Sous Label **/
+				var maxValue = d3.max(data, (d) => {						/** Recuperation de la valeurs Max Y **/
+					return d3.max(d.Values, (e) => e.number);
+				});
+
+				xScale0.domain(specialites);
+				xScale1.domain(categories).rangeRoundBands([0, xScale0.rangeBand()]);
+				yScale.domain([0, maxValue+20]);
+				
+				/** Affichage legend **/
+				var legend = svg.append("g")
+    				.attr("class", "legend");
+
+				var legenG = legend.selectAll("g")
+					.data(categories)
+					.enter()
+					.append("g")
+					.attr("transform", (d, i) => "translate("+(width +10) +", "+ i * (height / (categories.length + 1))+")");
+
+				legenG.append("rect")
+					.attr("x", 0)
+					.attr("width", 20)
+					.attr("height", 20)
+					.attr("fill", Colors);
+
+				legenG.append("text")
+					.attr("x", 25)
+					.attr("y", 9.5)
+					.attr("dy", "0.32em")
+					.text((d) => d);
+
+				var barG = svg.append("g")
+					.selectAll("g")
+					.data(data)
+					.enter()
+					.append("g")
+					/** En fonction de la specialité on fait un decalage **/
+					.attr("transform", (d) => "translate(" + xScale0(d.Specialite) + ",0)");
+			
+			//#region : Optionnal 
+				/** Implementation Danger **/
+				barG.selectAll(".bars-container-middle")
+					.data((d) => d.Values)
+					.enter()
+					.append("rect")
+					.attr("class", (d) => { 
+						if (d.number > d.maxAccept) return 'bars-container-middle danger';
+						else return 'bars-container-middle';
+					})
+					.attr("x", (d) => xScale1(d.categorie))
+					.attr("y", (d) => 0)
+					.attr("width", xScale1.rangeBand())
+					.transition()
+					.delay((d,i) => 750) // this is to do left then right bars
+					.duration(250)
+					.attr('height', height);
+			//#endregion
+					
+				/** Create Rects **/ 
+				barG.selectAll(".bars")
+					.data((d) => d.Values)
+					.enter()
+					.append("rect")
+					.attr("class", "bars")
+					.attr({		
+						"x" : (d) => xScale1(d.categorie),		
+						"y" : (d) => ( height/2), /** Demarre Du milieu **/
+						"width" : xScale1.rangeBand(),
+						"fill" : (d) => Colors(d.categorie)
+					})
+					.transition()
+					.delay((d,i) => i * 250) // this is to do left then right bars
+					.duration(350)
+					.attr({			
+						"y" : (d) => yScale(d.number),
+						"height" : (d) => height - yScale(d.number)
+					});
+
+			//#region : Optionnal
+				/** Create Rects : Max Value **/ 
+				barG.selectAll(".limit")
+					.data((d) => d.Values)
+					.enter()
+					.append("rect")
+					.attr("class", "limit")
+					.transition()
+					.delay((d,i) => i * 250) // this is to do left then right bars
+					.duration(350)
+					.attr({		
+						"x" : (d) => xScale1(d.categorie),		
+						"y" : (d) => yScale(d.maxAccept), /** Demarre Du milieu **/
+						"width" : xScale1.rangeBand(),
+						"fill" : (d) => 'black',
+						"height" : (d) => {
+							if (d.number > d.maxAccept) return 2;
+							else return 0;
+						}
+					});
+			//#endregion
+
+				/** Create Texts **/ 
+				barG.selectAll("text")
+					.data((d) => d.Values)
+					.enter()
+					.append("text")
+					.text((d) => d.number)
+					.attr({		
+						"x" : (d, i) => xScale1(d.categorie)+xScale1.rangeBand()/2	,		
+						"y" : (d) => height/2 + 10 ,
+						"font-family" : "sans-serif" ,
+						"font-size" : "11px",
+						"fill" : "white",
+						"text-anchor": "middle"
+					})
+					.transition()
+					.delay((d,i) => i * 250) // this is to do left then right bars
+					.duration(350)
+					.attr({			
+						"y" : (d) => yScale(d.number) + 10,
+					});
+
+				/** Create X axis **/
+				svg.append("g")
+					.attr("class", "axis")
+					.attr("transform", "translate(0," + height  + ")")
+					.call(xAxis);
+				
+				/** Create Y axis **/
+				svg.append("g")
+					.attr("class", "axis")
+					.attr("transform", "translate(0,0)")
+					.call(yAxis);
+
+			});
+		  </script>
+	</body>
+</html>
