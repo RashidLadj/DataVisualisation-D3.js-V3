@@ -24,9 +24,11 @@
 		<p>Click on this text to update the chart with new random data values</p>
 		<script type="text/javascript">
 			/** Define variables **/
-			var width = 600;
-			var height = 400;
-			var padding = 40;
+			var widthSVG = 800;
+			var heightSVG = 300;
+			var margin = {top: 20, right: 60, bottom: 20, left: 40};
+			var width = widthSVG - margin.left - margin.right;
+			var height = heightSVG - margin.top - margin.bottom;
 			var barPadding = 5;
 			var numDataPoints = 25;
 
@@ -45,11 +47,11 @@
 			// 					.range([padding, width - padding]);
 			var xScale = d3.scale.ordinal()
 								.domain(d3.range(dataset.length))
-								.rangeRoundBands([padding, width - padding], 0.05);
+								.rangeRoundBands([0, width], 0.05);
 
 			var yScale = d3.scale.linear()
 								.domain([0, d3.max(dataset)])
-								.range([height - padding, padding]);
+								.range([height, 0]);
 
 			/** Define X axis **/
 			var xAxis = d3.svg.axis()
@@ -66,42 +68,30 @@
 			/** Create SVG element **/
 			var svg = d3.select("body")
 						.append("svg")
-						.attr("width", width)
-						.attr("height", height)
+						.attr("width", widthSVG)
+						.attr("height", heightSVG)
 						.attr("border",1)
-						.append("g");
+						.append("g")
+						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			svg.selectAll("rect")
 				.data(dataset)
 				.enter()
 				.append("rect")
-				.attr("x", function(data, i) { /** Dynamique en fonction de la longueuur du dataset **/
-					return xScale(i);
-				})
-				.attr("y", function(data) {
-					return yScale( data) ;
-				})
+				.attr("x", (data, i) =>  xScale(i)) /** Dynamique en fonction de la longueuur du dataset **/
+						
+				.attr("y", (data) => yScale( data))
 				.attr("width", xScale.rangeBand())
-				.attr("height", function(data) {
-					return yScale(maxValue - data) - padding;
-				})
-				.attr("fill", function(data) {
-					return "rgb(0, 0, " + (data * 255/maxValue) + ")";
-				});
-			
+				.attr("height", (data) =>  height - yScale(data))
+				.attr("fill", (data) => "rgb(0, 0, " + (data * 255/maxValue) + ")");
+				
 			svg.selectAll("text")
 				.data(dataset)
 				.enter()
 				.append("text")
-				.text(function(data) {
-					return data;
-				})
-				.attr("x", function(data, i) {
-					return xScale(i)+ xScale.rangeBand() / 3;
-				})
-				.attr("y", function(data) {
-					return yScale(data) + 15;
-				})
+				.text((data) => data)
+				.attr("x", (data, i) => xScale(i)+ xScale.rangeBand() / 3)
+				.attr("y", (data) => yScale(data) + 15)
 				.attr("font-family", "sans-serif")
 				.attr("font-size", "11px")
 				.attr("fill", "white");
@@ -109,13 +99,13 @@
 			/** Create X axis **/
 			svg.append("g")
 				.attr("class", "axis")
-				.attr("transform", "translate(0," + (height - padding) + ")")
+				.attr("transform", "translate(0," + height + ")")
 				.call(xAxis);
 			
 			/** Create Y axis **/
 			svg.append("g")
 				.attr("class", "axis")
-				.attr("transform", "translate(" + padding + ",0)")
+				.attr("transform", "translate(0,0)")
 				.call(yAxis);
 						
 			
@@ -150,15 +140,8 @@
 				var maxValue = d3.max(dataset)
 
 				/** ReCreate Scale Functions because maxValue change **/
-				yScale = d3.scale.linear()
-									.domain([0, d3.max(dataset)])
-									.range([height - padding, padding]);
-				
-				/** ReDefine Y axis because maxValue change **/
-				yAxis = d3.svg.axis()
-								.scale(yScale)
-								.orient("left")
-								.ticks(10);
+				yScale.domain([0, d3.max(dataset)]);
+
 
 				svg.selectAll("rect")
 					.data(dataset)
@@ -167,24 +150,14 @@
 					// .delay(function(d, i) {
 					// 	return i * 100;		/** One-tenth of an additional second delay for each subsequent element **/
 					// })
-					.delay(function(d, i) {// it returns the values : 0, 50, 150, 200, 950
-						return i / dataset.length * 1000;
-					})
-					.duration(durationTransition) 	/** Duration Of transtion **/  
-					.ease("linear") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
-					.attr("x", function(data, i) { /** Dynamique en fonction de la longueuur du dataset **/
-						return xScale(i);
-					})
-					.attr("y", function(data) {
-						return yScale( data) ;
-					})
-					.attr("width", xScale.rangeBand())//width / dataset.length - barPadding)
-					.attr("height", function(data) {
-						return yScale(maxValue - data) - padding;
-					})
-					.attr("fill", function(data) {
-						return "rgb(0, 0, " + (data * 255/maxValue) + ")";
-					});
+					.delay((d, i) => i / dataset.length * 1000)// it returns the values : 0, 50, 150, 200, 950
+					.duration(durationTransition) 	/** Duration Of transtion **/ 
+					.ease("bounce") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
+					.attr("x", (data, i) => xScale(i)) /** Dynamique en fonction de la longueuur du dataset **/
+					.attr("y", (data) => yScale(data))
+					.attr("width", xScale.rangeBand())
+					.attr("height", (data) => yScale(maxValue - data))
+					.attr("fill", (data) =>  "rgb(0, 0, " + (data * 255/maxValue) + ")")
 				
 				svg.selectAll("text")
 					.data(dataset)
@@ -193,20 +166,13 @@
 					// .delay(function(d, i) {
 					// 	return i * 100;		/** One-tenth of an additional second delay for each subsequent element **/
 					// })
-					.delay(function(d, i) {// it returns the values : 0, 50, 150, 200, 950
-						return i / dataset.length * 1000;
-					})
-					.duration(durationTransition) 	/** Duration Of transtion **/ 
-					.ease("linear") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
-					.text(function(data) {
-						return data;
-					})
-					.attr("x", function(data, i) {
-						return xScale(i)+ xScale.rangeBand() / 3;
-					})
-					.attr("y", function(data) {
-						return yScale(data) + 15;
-					})
+					.delay((d, i) => i / dataset.length * 1000)// it returns the values : 0, 50, 150, 200, 950
+
+					.duration(durationTransition) 	/** Duration Of transtion **/
+					.ease("bounce") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
+					.text((data) => data)
+					.attr("x", (data, i) => xScale(i)+ xScale.rangeBand() / 3)
+					.attr("y", (data) => yScale(data) + 15)
 					.attr("font-family", "sans-serif")
 					.attr("font-size", "11px")
 					.attr("fill", "white");
@@ -214,13 +180,13 @@
 				/** ReCreate X axis : just redraw because remove g **/
 				svg.append("g")
 					.attr("class", "axis")
-					.attr("transform", "translate(0," + (height - padding) + ")")
+					.attr("transform", "translate(0," + (height) + ")")
 					.call(xAxis);
 				
 				/** ReCreate Y axis : Update Value**/
 				svg.append("g")
 					.attr("class", "axis")
-					.attr("transform", "translate(" + padding + ",0)")
+					.attr("transform", "translate(0,0)")
 					.call(yAxis);
 			}
 		//#endregion "Loop Draw"
