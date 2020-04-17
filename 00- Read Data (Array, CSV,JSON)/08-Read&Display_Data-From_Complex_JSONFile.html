@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Read and display Data from Complex Json File</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+
+			d3.json("Data/info-data-complex.json", function(error, data) {
+
+				if (error) { //If error is not null, something went wrong.
+					console.log(error); //Log the error.
+				} 
+				else { //If no error, the file loaded correctly. Yay!
+					d3.select("body")
+						.data(data)
+						.enter()
+						.append("p")
+						.text((d) => "In Specialité   " + d.Specialite+"  ")
+
+						.selectAll("p")
+						.data((d) => d.Values) /** lvl 2 of data **/
+						.enter()
+						.append("p")
+						.text((d,i) => "in  " + d.categorie + " number of request is " + d.number + " and limit is " + d.maxAccept);
+				}
+
+			});
+			
+		</script>
+	</body>
+</html>

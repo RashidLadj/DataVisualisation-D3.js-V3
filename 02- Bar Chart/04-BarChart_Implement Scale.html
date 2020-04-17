@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Start With SVG _ Append rect</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			/** Define variables **/
+			var widthSVG = 600;
+			var heightSVG = 300;
+			var margin = {top: 20, right: 20, bottom: 20, left: 20};
+			var width = widthSVG - margin.left - margin.right;
+			var height = heightSVG - margin.top - margin.bottom;
+
+			var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+							11, 12, 15, 20, 18, 17, 16, 18, 50, 25 ];
+			var maxValue = d3.max(dataset)
+
+			/** Create Scale Functions **/
+			var xScale = d3.scale.ordinal()
+								 .domain(Array.from(Array(dataset.length).keys()))
+								 .rangeRoundBands([0, width]);
+
+			var yScale = d3.scale.linear()
+								 .domain([0, maxValue])
+								 .range([0, height]);
+			
+			/** Create SVG element **/ 
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", widthSVG)
+						.attr("height", heightSVG)
+						.append("g")
+						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			/** Create Rects **/ 		
+			svg.selectAll("rect")
+				.data(dataset)
+				.enter()
+				.append("rect")
+				.attr({		
+					"x" : (d, i) => xScale(i),		
+					"y" : (d) => yScale(maxValue - d),
+					"width" : xScale.rangeBand() - 2,
+					"height" : (d) => yScale(d) ,
+					"fill" : (d) => "rgb(0, 0, " + (d * 255/maxValue) + ")"
+				});
+			
+			/** Create Texts **/ 
+			svg.selectAll("text")
+				.data(dataset)
+				.enter()
+				.append("text")
+				.text((d) => d)
+				.attr({		
+					"x" : (d, i) => xScale(i)+(xScale.rangeBand()/3-3),		
+					"y" : (d) => yScale(maxValue - d) + 15,
+					"font-family" : "sans-serif" ,
+					"font-size" : "11px",
+					"fill" : "white"
+				});
+
+		</script>
+	</body>
+</html>

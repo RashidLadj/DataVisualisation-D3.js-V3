@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Start With SVG _ Append g for X and Y Axis</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			/** Define variables **/
+			var widthSVG = 500;
+			var heightSVG = 400;
+			var margin = {top: 20, right: 20, bottom: 20, left: 40};
+			var width = widthSVG - margin.left - margin.right;
+			var height = heightSVG - margin.top - margin.bottom;
+
+			var maxValueX = width;
+			var maxValueY = height;
+
+			/** Create Scale Functions **/
+			var xScale = d3.scale.linear()
+								 .domain([0, maxValueX])
+								 .range([0, width]);
+
+			var yScale = d3.scale.linear()
+								 .domain([0, maxValueY])
+								 .range([height, 0]);
+
+			/** Define X axis **/
+			var xAxis = d3.svg.axis()
+							  .scale(xScale)
+							  .orient("bottom")
+							  .ticks(10);
+			
+			/** Define X axis **/
+			var yAxis = d3.svg.axis()
+							  .scale(yScale)
+							  .orient("left")
+							  .ticks(10);
+
+			/** Create SVG element **/
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", widthSVG)
+						.attr("height", heightSVG)
+						.append("g")
+						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			/** Create X axis **/
+			svg.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate(0," + height + ")")
+				.call(xAxis);
+			
+			/** Create Y axis **/
+			svg.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate(0,0)")
+				.call(yAxis);
+				
+		  </script>
+	</body>
+</html>

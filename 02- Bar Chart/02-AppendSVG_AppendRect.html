@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Start With SVG _ Append rect </title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			/** Global variables **/
+			var width = 500;
+			var height = 100;
+			var barPadding = 1;
+
+			var dataset = [ 5, 10, 13, 19, 61, 25, 22, 18, 35, 13,
+							11, 12, 45, 20, 18, 17, 16, 78, 23, 25 ];
+			
+			/** Create SVG element **/ 
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", width)
+						.attr("height", height);
+
+			/** Create Rects **/ 
+			svg.selectAll("rect")
+			   .data(dataset)
+			   .enter()
+			   .append("rect")
+			   .attr("x", (d,i) => i * (width/dataset.length))
+			   .attr("y", (d,i) => height-d)
+			   .attr("width", width/dataset.length - barPadding)
+			   .attr("height", (d,i)=> d);
+			
+		</script>
+	</body>
+</html>

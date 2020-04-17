@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Read and display Data from Simple Json File</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+
+			var dataset = [
+				{ "first_name": "Stack", "last_name": "Overflow" },
+				{ "first_name": "Face", "last_name": "Book" },
+				{ "first_name": "Algérie", "last_name": "Télécom" },
+				{ "first_name": "Linked", "last_name": "In" }
+			]; 
+
+			d3.select("body").selectAll("p")
+				.data(dataset)
+				.enter()
+				.append("p")
+				.text((d,i) => "Person N°  " + i + " name is : " + d.first_name + "  " + d.last_name)
+				.style("color", "black");	  
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Append SVG & implement margin </title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			/** Global variables **/
+			var widthSVG = 500;
+			var heightSVG = 400;
+			var margin = {top: 20, right: 20, bottom: 20, left: 20};
+			var width = widthSVG - margin.left - margin.right;
+			var height = heightSVG - margin.top - margin.bottom;
+
+			/** Create SVG element **/ 
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", widthSVG)
+						.attr("height", heightSVG)
+						.append("g")
+						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			/** Juste Pour Delimiter visuellement le SVG after padding **/
+			svg.append("rect")
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("height", height)
+				.attr("width", width)
+				.style("stroke", 'black')
+				.style("fill", "none")
+				.style("stroke-width", 1);
+			
+		</script>
+	</body>
+</html>

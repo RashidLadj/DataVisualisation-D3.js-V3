@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Start With SVG _ Append Cicle</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			/** Global variables **/
+			var width = 500;
+			var height = 100;
+			var dataset = [ 5, 10, 15, 20, 25 ];
+			
+			/** Create SVG element **/ 
+			var svg = d3.select("body")
+						.append("svg")
+						.attr({
+							"width" : width,
+							"height": height
+						});
+
+			/** Create Circles **/ 
+			svg.selectAll("circle")
+			    .data(dataset)
+			    .enter()
+				.append("circle")
+				.attr({
+					"cx" : (d, i) => i * 50 + 25, /** i from 0 to number of data **/
+					"cy" : 2*height/3,
+					"r"  : (d) => d,
+					"fill" : "yellow",
+					"stroke" : "orange",
+					"stroke-width" : (d) => d/2
+				});
+
+		</script>
+	</body>
+</html>

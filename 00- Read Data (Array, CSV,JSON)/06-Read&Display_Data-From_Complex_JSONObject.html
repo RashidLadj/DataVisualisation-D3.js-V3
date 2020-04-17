@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Read and display Data from Complex Json File</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+
+			var dataset = [
+				{
+					"Specialite": "RSD",
+					"Values":[
+						{ "categorie" : "M1", "number" : 185, "maxAccept" : 140 },
+						{ "categorie" : "M2", "number" : 320, "maxAccept" : 200 }
+					]	
+				},
+				{
+					"Specialite": "MIL",
+					"Values":[
+						{ "categorie" : "M1", "number" : 185, "maxAccept" : 160 },
+						{ "categorie" : "M2", "number" : 230, "maxAccept" : 130 }
+					]
+				},
+				{
+					"Specialite": "SII",
+					"Values":[
+						{ "categorie" : "M1", "number" : 230, "maxAccept" : 150 },
+						{ "categorie" : "M2", "number" : 240, "maxAccept" : 120 }
+					]
+				}
+			];
+
+			d3.select("body").selectAll("p")
+				.data(dataset)
+				.enter()
+				.append("p")
+				.text((d) => "In Specialité   " + d.Specialite+"  ")
+
+				.selectAll("p")
+				.data((d) => d.Values)
+				.enter()
+				.append("p")
+				.text((d) => "in  " + d.categorie + " number of request is " + d.number + " and limit is " + d.maxAccept);
+
+		</script>
+	</body>
+</html>

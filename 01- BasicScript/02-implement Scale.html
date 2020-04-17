@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Start With SVG _ Append rect</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			/** Global variables **/
+			var width = 500;
+			var height = 300;
+			
+			var datasetX = [ "test1", "test2", "test3", "test4", "test5"];
+			var datasetY = [ 5, 10, 13, 19, 21];
+
+			var maxValue = d3.max(datasetX)
+
+			/**  Create Scale Functions **/
+			var xScale = d3.scale.ordinal()
+								 .domain(datasetX)
+								 .rangeRoundBands([0, width]);
+
+			var yScale = d3.scale.linear()
+								 .domain([0, d3.max(datasetY)])
+								 .range([0, height]);
+
+			/**  Display Result **/
+			console.log("Scale Odinal de 5 chaines sur un width = "+ width);
+			console.log(datasetX.map(datasetX => xScale(datasetX)));
+			console.log("Scale Linear de 5 valeurs dont la valeur max = "+ maxValue +" sur un height de " + height);
+			console.log(datasetY.map(datasetY => yScale(datasetY)));
+			
+			
+			
+		</script>
+	</body>
+</html>

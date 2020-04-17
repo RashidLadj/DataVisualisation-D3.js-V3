@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Read and display Data from CSV file</title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+		
+			d3.csv("data/city.csv", function(error, d) {
+				if (error) { //If error is not null, something went wrong.
+					console.log(error); //Log the error.
+				} 
+				else { //If no error, the file loaded correctly. Yay!
+					d3.select("body").selectAll("p")
+						.data(d)
+						.enter()
+						.append("p")
+						.text((d) => "in "+d.City + " city, temperature is ="+d.JanTemp+"°")
+						.style("color", "black");	  
+				}
+				
+			});
+			
+		</script>
+	</body>
+</html>

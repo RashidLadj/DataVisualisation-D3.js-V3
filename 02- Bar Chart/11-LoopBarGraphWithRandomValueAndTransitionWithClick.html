@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Loop Bar Graph with Random Value and animation </title>
+		<script type="text/javascript" src="d3.v3.js"></script>
+		<style type="text/css">
+			
+				.axis path,
+				.axis line {
+					fill: none;
+					stroke: black;
+					shape-rendering: crispEdges;
+				}
+				
+				.axis text {
+					font-family: sans-serif;
+					font-size: 11px;
+				}
+
+		</style>
+	</head>
+	<body>
+		<p>Click on this text to update the chart with new random data values</p>
+		<script type="text/javascript">
+			/** Define variables **/
+			var widthSVG = 800;
+			var heightSVG = 300;
+			var margin = {top: 20, right: 60, bottom: 20, left: 40};
+			var width = widthSVG - margin.left - margin.right;
+			var height = heightSVG - margin.top - margin.bottom;
+			var barPadding = 5;
+			var numDataPoints = 25;
+
+		//#region "First Draw"
+			var dataset = []; /** Initialize empty array **/
+			for (var i = 0; i < numDataPoints; i++) { /** Loop 25 times **/
+				var newNumber = Math.floor(Math.random() * 30); /** New random number (0-30) **/
+				dataset.push(newNumber); /** Add new number to array **/
+			}
+			
+			var maxValue = d3.max(dataset)
+
+			/** Create Scale Functions **/
+			var xScale = d3.scale.ordinal()
+								.domain(d3.range(dataset.length))
+								.rangeRoundBands([0, width], 0.05);
+
+			var yScale = d3.scale.linear()
+								.domain([0, d3.max(dataset)])
+								.range([height, 0]);
+
+			/** Define X axis **/
+			var xAxis = d3.svg.axis()
+							.scale(xScale)
+							.orient("bottom")
+							.ticks(10);
+			
+			/** Define X axis **/
+			var yAxis = d3.svg.axis()
+							.scale(yScale)
+							.orient("left")
+							.ticks(10);
+
+			/** Create SVG element **/
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", widthSVG)
+						.attr("height", heightSVG)
+						.attr("border",1)
+						.append("g")
+						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			/** Create Rects **/
+			svg.selectAll("rect")
+				.data(dataset)
+				.enter()
+				.append("rect")
+				.attr("x", (data, i) =>  xScale(i)) /** Dynamique en fonction de la longueuur du dataset **/
+						
+				.attr("y", (data) => yScale( data))
+				.attr("width", xScale.rangeBand())
+				.attr("height", (data) =>  height - yScale(data))
+				.attr("fill", (data) => "rgb(0, 0, " + (data * 255/maxValue) + ")");
+				
+			/** Create Texts **/
+			svg.selectAll("text")
+				.data(dataset)
+				.enter()
+				.append("text")
+				.text((data) => data)
+				.attr("x", (data, i) => xScale(i)+ xScale.rangeBand() / 3)
+				.attr("y", (data) => yScale(data) + 15)
+				.attr("font-family", "sans-serif")
+				.attr("font-size", "11px")
+				.attr("fill", "white");
+
+			/** Create X axis **/
+			svg.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate(0," + height + ")")
+				.call(xAxis);
+			
+			/** Create Y axis **/
+			svg.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate(0,0)")
+				.call(yAxis);
+		//#endregion "First Draw"
+
+		//#region "AfterClick Draw"
+			d3.select("p").on("click", update);
+			var durationTransition = 2000;
+			var delayTransition = 500;
+			function update(){
+				/** Remove Axis **/
+				svg.selectAll("g").remove();
+
+				var dataset = []; /** Initialize empty array **/
+				var rand = Math.floor(Math.random() * 10)
+				for (var i = 0; i < numDataPoints; i++) { /** Loop 25 times **/
+					var newNumber = Math.floor(Math.random() * (30+rand)); /** New random number (0-30) **/
+					dataset.push(newNumber); /** Add new number to array **/
+				}
+				
+				var maxValue = d3.max(dataset)
+
+				/** ReCreate Scale Functions because maxValue change **/
+				yScale.domain([0, d3.max(dataset)]);
+
+				/** ReCreate Rects **/
+				svg.selectAll("rect")
+					.data(dataset)
+					.transition()                  /** <-- This makes it a smooth transition! Update value ,not append **/
+					//.delay(delayTransition)						/** Delay before transition **/
+					// .delay(function(d, i) {
+					// 	return i * 100;		/** One-tenth of an additional second delay for each subsequent element **/
+					// })
+					.delay((d, i) => i / dataset.length * 1000)// it returns the values : 0, 50, 150, 200, 950
+					.duration(durationTransition) 	/** Duration Of transtion **/ 
+					.ease("bounce") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
+					.attr("x", (data, i) => xScale(i)) /** Dynamique en fonction de la longueuur du dataset **/
+					.attr("y", (data) => yScale(data))
+					.attr("width", xScale.rangeBand())
+					.attr("height", (data) => yScale(maxValue - data))
+					.attr("fill", (data) =>  "rgb(0, 0, " + (data * 255/maxValue) + ")")
+				
+				/** ReCreate Texts **/
+				svg.selectAll("text")
+					.data(dataset)
+					.transition()		/** <-- This makes it a smooth transition! Update value ,not append **/ 
+					//.delay(delayTransition)						/** Delay before transition **/
+					// .delay(function(d, i) {
+					// 	return i * 100;		/** One-tenth of an additional second delay for each subsequent element **/
+					// })
+					.delay((d, i) => i / dataset.length * 1000)// it returns the values : 0, 50, 150, 200, 950
+
+					.duration(durationTransition) 	/** Duration Of transtion **/
+					.ease("bounce") /** ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"] **/
+					.text((data) => data)
+					.attr("x", (data, i) => xScale(i)+ xScale.rangeBand() / 3)
+					.attr("y", (data) => yScale(data) + 15)
+					.attr("font-family", "sans-serif")
+					.attr("font-size", "11px")
+					.attr("fill", "white");
+
+				/** ReCreate X axis : just redraw because remove g **/
+				svg.append("g")
+					.attr("class", "axis")
+					.attr("transform", "translate(0," + (height) + ")")
+					.call(xAxis);
+				
+				/** ReCreate Y axis : Update Value**/
+				svg.append("g")
+					.attr("class", "axis")
+					.attr("transform", "translate(0,0)")
+					.call(yAxis);
+			}
+		//#endregion "Loop Draw"
+
+		</script>
+	</body>
+</html>
