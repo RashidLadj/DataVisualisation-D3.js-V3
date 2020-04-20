@@ -13,7 +13,7 @@ Gallery: https://github.com/mbostock/d3/wiki/Gallery
 
 
 # Lunch
-For lunch server, just need local server, you can obtain it with this script python :
+For read data from csvFile, or JsonFile yous must lunch local server, you can obtain it with this script python :
 
 <pre><code>
     # if Python Version is 3.X
