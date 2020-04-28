@@ -12,7 +12,7 @@ API Documentation: https://github.com/d3/d3/blob/master/API.md
 Gallery: https://github.com/mbostock/d3/wiki/Gallery
 
 
-# Lunch
+# Launch
 For read data from csvFile, or JsonFile yous must lunch local server, you can obtain it with this script python :
 
 <pre><code>
